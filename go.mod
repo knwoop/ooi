@@ -1,4 +1,4 @@
-module github.com/knwoop/oooooi
+module github.com/knwoop/ooi
 
 go 1.25.1
 
