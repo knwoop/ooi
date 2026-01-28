@@ -14,8 +14,7 @@ var installCmd = &cobra.Command{
 	Long:  "Register ooi as a launchd service to start automatically on login.",
 	Run: func(cmd *cobra.Command, args []string) {
 		if launchd.IsInstalled() {
-			fmt.Println("Service is already installed.")
-			fmt.Println("Run 'ooi uninstall' first to reinstall.")
+			fmt.Println("Service is already installed. Run 'ooi reinstall' to update.")
 			return
 		}
 
