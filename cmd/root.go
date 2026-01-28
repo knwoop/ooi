@@ -8,14 +8,14 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/knwoop/oooooi/internal/daemon"
+	"github.com/knwoop/ooi/internal/daemon"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "oooooi",
+	Use:   "ooi",
 	Short: "Meeting reminder CLI tool",
-	Long:  "oooooi is a macOS CLI tool that automatically opens Google Meet 1 minute before meetings.",
+	Long:  "ooi is a macOS CLI tool that automatically opens Google Meet 1 minute before meetings.",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
@@ -29,7 +29,7 @@ var rootCmd = &cobra.Command{
 			cancel()
 		}()
 
-		log.Println("Starting oooooi daemon...")
+		log.Println("Starting ooi daemon...")
 		if err := daemon.Start(ctx); err != nil {
 			if err != context.Canceled {
 				fmt.Fprintf(os.Stderr, "Error: %v\n", err)

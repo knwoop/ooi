@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/knwoop/oooooi/internal/calendar"
+	"github.com/knwoop/ooi/internal/calendar"
 	"github.com/spf13/cobra"
 )
 

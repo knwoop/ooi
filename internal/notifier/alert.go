@@ -16,7 +16,7 @@ const (
 
 func ShowMeetingAlert(title string) (AlertResult, error) {
 	script := fmt.Sprintf(`
-display dialog "MTG開始！\n%s" with title "oooooi" buttons {"あとで", "参加"} default button "参加" with icon caution
+display dialog "MTG開始！\n%s" with title "ooi" buttons {"あとで", "参加"} default button "参加" with icon caution
 `, escapeAppleScript(title))
 
 	cmd := exec.Command("osascript", "-e", script)

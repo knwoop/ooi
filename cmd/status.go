@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/knwoop/oooooi/internal/calendar"
+	"github.com/knwoop/ooi/internal/calendar"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +19,7 @@ var statusCmd = &cobra.Command{
 
 		token, err := calendar.LoadToken()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Not authenticated. Run 'oooooi auth' first.\n")
+			fmt.Fprintf(os.Stderr, "Not authenticated. Run 'ooi auth' first.\n")
 			os.Exit(1)
 		}
 

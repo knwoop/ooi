@@ -29,7 +29,7 @@ func ConfigDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(home, ".config", "oooooi"), nil
+	return filepath.Join(home, ".config", "ooi"), nil
 }
 
 func NewClient(ctx context.Context, token *oauth2.Token) (*Client, error) {

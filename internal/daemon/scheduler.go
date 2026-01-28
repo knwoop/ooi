@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/knwoop/oooooi/internal/calendar"
-	"github.com/knwoop/oooooi/internal/notifier"
+	"github.com/knwoop/ooi/internal/calendar"
+	"github.com/knwoop/ooi/internal/notifier"
 )
 
 const (
@@ -102,7 +102,7 @@ func (s *Scheduler) cleanupOldEvents() {
 func Start(ctx context.Context) error {
 	token, err := calendar.LoadToken()
 	if err != nil {
-		return fmt.Errorf("not authenticated, run 'oooooi auth' first: %w", err)
+		return fmt.Errorf("not authenticated, run 'ooi auth' first: %w", err)
 	}
 
 	client, err := calendar.NewClient(ctx, token)

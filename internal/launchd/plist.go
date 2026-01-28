@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	Label    = "com.oooooi"
+	Label    = "com.ooi"
 	plistTpl = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -25,9 +25,9 @@ const (
     <key>KeepAlive</key>
     <true/>
     <key>StandardOutPath</key>
-    <string>/tmp/oooooi.log</string>
+    <string>/tmp/ooi.log</string>
     <key>StandardErrorPath</key>
-    <string>/tmp/oooooi.err</string>
+    <string>/tmp/ooi.err</string>
 </dict>
 </plist>
 `
