@@ -52,12 +52,15 @@ var statusCmd = &cobra.Command{
 		var nextEvent *calendar.Event
 
 		for i := range events {
-			if events[i].StartTime.Before(now) || events[i].StartTime.Equal(now) {
-				// Meeting has started (ongoing)
+			started := events[i].StartTime.Compare(now) <= 0 // StartTime <= now
+			ended := events[i].EndTime.Compare(now) <= 0     // EndTime <= now
+
+			if started && !ended {
+				// Meeting is ongoing (started but not ended)
 				if ongoingEvent == nil {
 					ongoingEvent = &events[i]
 				}
-			} else {
+			} else if !started {
 				// Meeting hasn't started yet (upcoming)
 				if nextEvent == nil {
 					nextEvent = &events[i]
