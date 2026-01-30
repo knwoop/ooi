@@ -26,6 +26,7 @@ type Event struct {
 	ID             string
 	Title          string
 	StartTime      time.Time
+	EndTime        time.Time
 	MeetLink       string
 	ResponseStatus string // accepted, tentative, needsAction, declined
 }
@@ -105,10 +106,16 @@ func (c *Client) GetEventsInRange(ctx context.Context, lookback, lookahead time.
 			continue
 		}
 
+		endTime, err := parseEventTime(item.End)
+		if err != nil {
+			continue
+		}
+
 		result = append(result, Event{
 			ID:             item.Id,
 			Title:          item.Summary,
 			StartTime:      startTime,
+			EndTime:        endTime,
 			MeetLink:       item.HangoutLink,
 			ResponseStatus: responseStatus,
 		})
