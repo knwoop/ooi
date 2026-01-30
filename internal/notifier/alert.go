@@ -99,6 +99,13 @@ func OpenMeetLink(url string) error {
 	return cmd.Run()
 }
 
+func ShowAuthErrorAlert() error {
+	script := `display dialog "Session expired. Please run 'ooi auth' to re-authenticate." with title "ooi" buttons {"OK"} default button "OK" with icon stop`
+	cmd := exec.Command("osascript", "-e", script)
+	_, err := cmd.Output()
+	return err
+}
+
 func escapeAppleScript(s string) string {
 	s = strings.ReplaceAll(s, "\\", "\\\\")
 	s = strings.ReplaceAll(s, "\"", "\\\"")

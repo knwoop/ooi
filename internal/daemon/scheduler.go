@@ -2,6 +2,7 @@ package daemon
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -14,6 +15,7 @@ import (
 
 	"github.com/knwoop/ooi/internal/calendar"
 	"github.com/knwoop/ooi/internal/notifier"
+	"google.golang.org/api/googleapi"
 )
 
 const (
@@ -29,10 +31,11 @@ type eventKey struct {
 }
 
 type Scheduler struct {
-	client         *calendar.Client
-	cachedEvents   []calendar.Event
-	cacheMu        sync.RWMutex
-	notifiedEvents map[eventKey]bool
+	client          *calendar.Client
+	cachedEvents    []calendar.Event
+	cacheMu         sync.RWMutex
+	notifiedEvents  map[eventKey]bool
+	authErrorShown  bool
 }
 
 func NewScheduler(client *calendar.Client) *Scheduler {
@@ -83,14 +86,32 @@ func (s *Scheduler) fetchEvents(ctx context.Context) {
 	events, err := s.client.GetUpcomingEvents(ctx, lookAheadWindow)
 	if err != nil {
 		log.Printf("Failed to fetch events: %v", err)
+		if isAuthError(err) && !s.authErrorShown {
+			log.Println("Auth error detected, showing alert")
+			if alertErr := notifier.ShowAuthErrorAlert(); alertErr != nil {
+				log.Printf("Failed to show auth error alert: %v", alertErr)
+			}
+			s.authErrorShown = true
+		}
 		return
 	}
+
+	// Reset auth error flag on successful fetch
+	s.authErrorShown = false
 
 	s.cacheMu.Lock()
 	s.cachedEvents = events
 	s.cacheMu.Unlock()
 
 	log.Printf("Fetched %d events", len(events))
+}
+
+func isAuthError(err error) bool {
+	var gErr *googleapi.Error
+	if errors.As(err, &gErr) {
+		return gErr.Code == 401 || gErr.Code == 403
+	}
+	return false
 }
 
 func (s *Scheduler) checkAlerts() {
