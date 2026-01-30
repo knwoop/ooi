@@ -49,16 +49,20 @@ display dialog "Meeting starting!\n%s" with title "ooi" buttons {"Join"} default
 }
 
 func showMultipleMeetingsAlert(meetings []Meeting) (AlertResult, error) {
+	const maxTitleLen = 20
+
 	// AppleScript buttons are limited to 3, use first 3 meetings
 	maxButtons := 3
 	if len(meetings) < maxButtons {
 		maxButtons = len(meetings)
 	}
 
-	// Build button list (AppleScript shows buttons right-to-left, so reverse order)
+	// Build button list with truncated titles (AppleScript shows buttons right-to-left, so reverse order)
+	truncatedTitles := make([]string, maxButtons)
 	var buttons []string
 	for i := maxButtons - 1; i >= 0; i-- {
-		buttons = append(buttons, fmt.Sprintf("\"%s\"", escapeAppleScript(meetings[i].Title)))
+		truncatedTitles[i] = truncate(meetings[i].Title, maxTitleLen)
+		buttons = append(buttons, fmt.Sprintf("\"%s\"", escapeAppleScript(truncatedTitles[i])))
 	}
 
 	script := fmt.Sprintf(`
@@ -80,9 +84,9 @@ return selectedButton
 
 	selected := strings.TrimSpace(string(output))
 
-	// Find the index of the selected meeting
-	for i, m := range meetings {
-		if m.Title == selected {
+	// Find the index of the selected meeting by truncated title
+	for i := 0; i < maxButtons; i++ {
+		if truncatedTitles[i] == selected {
 			return AlertResult{Joined: true, Index: i}, nil
 		}
 	}
@@ -99,4 +103,12 @@ func escapeAppleScript(s string) string {
 	s = strings.ReplaceAll(s, "\\", "\\\\")
 	s = strings.ReplaceAll(s, "\"", "\\\"")
 	return s
+}
+
+func truncate(s string, maxLen int) string {
+	runes := []rune(s)
+	if len(runes) <= maxLen {
+		return s
+	}
+	return string(runes[:maxLen]) + "..."
 }
