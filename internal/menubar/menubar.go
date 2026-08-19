@@ -67,7 +67,7 @@ func onReady(ctx context.Context, provider EventProvider) {
 				provider.Sync()
 			case <-mOpenMeet.ClickedCh:
 				if currentMeetLink != "" {
-					notifier.OpenMeetLink(currentMeetLink)
+					_ = notifier.OpenMeetLink(currentMeetLink) // best-effort: menu bar has no error surface
 				}
 			case <-mQuit.ClickedCh:
 				systray.Quit()

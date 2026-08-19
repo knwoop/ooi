@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Read-only by default; the verification suite needs nothing more.
+permissions:
+  contents: read
+
+# Cancel superseded CI runs for the same PR or branch. Keyed by
+# head_ref on PRs (so pushes to a PR cancel its in-flight run) and by
+# ref otherwise.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    uses: ./.github/workflows/verify.yaml
+    permissions:
+      contents: read
