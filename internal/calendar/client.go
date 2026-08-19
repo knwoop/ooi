@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/option"
 )
@@ -44,20 +43,9 @@ func ConfigDir() (string, error) {
 }
 
 func NewClient(ctx context.Context, token *oauth2.Token) (*Client, error) {
-	configDir, err := ConfigDir()
+	config, err := GetOAuthConfig()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get config dir: %w", err)
-	}
-
-	credentialsPath := filepath.Join(configDir, "credentials.json")
-	b, err := os.ReadFile(credentialsPath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read credentials.json: %w", err)
-	}
-
-	config, err := google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse credentials: %w", err)
+		return nil, fmt.Errorf("failed to get OAuth config: %w", err)
 	}
 
 	client := config.Client(ctx, token)
@@ -170,19 +158,4 @@ func parseEventTime(eventTime *calendar.EventDateTime) (time.Time, error) {
 		return time.Parse("2006-01-02", eventTime.Date)
 	}
 	return time.Time{}, fmt.Errorf("no valid time found")
-}
-
-func GetOAuthConfig() (*oauth2.Config, error) {
-	configDir, err := ConfigDir()
-	if err != nil {
-		return nil, err
-	}
-
-	credentialsPath := filepath.Join(configDir, "credentials.json")
-	b, err := os.ReadFile(credentialsPath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read credentials.json: %w", err)
-	}
-
-	return google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
 }
