@@ -70,7 +70,15 @@ func Execute() {
 	}
 }
 
+// version is set at build time by goreleaser via -ldflags "-X ...cmd.version=".
+// When empty (go install / go build), the version is derived from build info.
+var version string
+
 func getVersion() string {
+	if version != "" {
+		return version
+	}
+
 	info, ok := debug.ReadBuildInfo()
 	if !ok {
 		return "dev"

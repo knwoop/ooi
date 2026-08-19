@@ -4,6 +4,9 @@ A macOS CLI tool that automatically opens Google Meet 1 minute before meetings.
 
 ## Installation
 
+Download a prebuilt binary from [GitHub Releases](https://github.com/knwoop/ooi/releases)
+(darwin/linux, amd64/arm64), or install with `go`:
+
 ```bash
 go install github.com/knwoop/ooi@latest
 ```

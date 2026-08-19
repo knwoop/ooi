@@ -1,0 +1,18 @@
+version: "2"
+
+linters:
+  settings:
+    errcheck:
+      # Best-effort writes, closes, and shutdowns whose failures are
+      # deliberately ignored: OAuth callback response/server teardown,
+      # deferred file closes after a successful write, PID-file cleanup.
+      exclude-functions:
+        - (io.Closer).Close
+        - (*os.File).Close
+        - (*net/http.Server).Shutdown
+        - (*net/http.Server).Close
+        - (io.Writer).Write
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
+        - os.Remove

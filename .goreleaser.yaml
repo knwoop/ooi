@@ -1,0 +1,39 @@
+version: 2
+
+project_name: ooi
+
+# ooi is primarily a macOS tool (launchd, osascript notifications, menu
+# bar via fyne.io/systray). The macOS menu bar requires cgo (Objective-C),
+# so darwin binaries must be built on a macOS runner with CGO_ENABLED=1;
+# linux binaries are pure Go. Windows does not compile (SIGUSR1) and is
+# intentionally excluded.
+builds:
+  - id: darwin
+    main: .
+    env:
+      - CGO_ENABLED=1
+    goos: [darwin]
+    goarch: [amd64, arm64]
+    ldflags:
+      - -s -w -X github.com/knwoop/ooi/cmd.version={{.Version}}
+
+  - id: linux
+    main: .
+    env:
+      - CGO_ENABLED=0
+    goos: [linux]
+    goarch: [amd64, arm64]
+    ldflags:
+      - -s -w -X github.com/knwoop/ooi/cmd.version={{.Version}}
+
+archives:
+  - formats: [tar.gz]
+
+checksum:
+  name_template: checksums.txt
+
+release:
+  draft: false
+
+changelog:
+  use: github-native
