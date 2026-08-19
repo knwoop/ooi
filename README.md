@@ -19,7 +19,32 @@ cd ooi
 go build -o /usr/local/bin/ooi .
 ```
 
+### Internal distribution (embedded OAuth client)
+
+To hand `ooi` to teammates without asking each of them to create a Google
+Cloud project, build once with your OAuth client embedded and share the binary.
+Recipients then only need to run `ooi auth` and `ooi install` (skip Setup steps
+1–2 below).
+
+```bash
+git clone https://github.com/knwoop/ooi.git
+cd ooi
+OOI_CLIENT_ID=xxx.apps.googleusercontent.com OOI_CLIENT_SECRET=GOCSPX-xxx make build-internal
+# → ./ooi
+```
+
+Notes:
+
+- Use a **Desktop app** OAuth client. Its secret is not treated as confidential
+  by Google, but do not commit the built binary or the values to a public repo.
+- On Google Workspace, set the OAuth consent screen user type to **Internal**
+  so only members of your organization can sign in and no verification is needed.
+- If `~/.config/ooi/credentials.json` exists it takes precedence over the
+  embedded client, so existing setups keep working.
+
 ## Setup
+
+If you received an internal build (see above), skip to step 3.
 
 ### 1. Create OAuth Client ID in Google Cloud Console
 
